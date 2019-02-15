@@ -1,0 +1,40 @@
+﻿@model IEnumerable<HotelIntitity.Models.Client>
+@{
+    ViewData["Title"] = "Index";
+}
+<h1 class="display-4">
+    Список клиентов</h1>
+    <p>
+        <a asp-action="Create">Добавить клиента</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    ФИО Клиента
+                </th>
+                <th>
+                    Электронная почта
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Детально</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
