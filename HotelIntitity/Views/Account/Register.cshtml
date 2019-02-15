@@ -1,0 +1,42 @@
+﻿@model HotelIntitity.ViewModels.RegisterViewModel
+
+
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+
+<h1>@ViewData["Title"]</h1>
+<h4>Регистрация нового пользователя</h4>
+<div class="row">
+    <div class="col-md-4">
+
+
+        <form method="post" asp-controller="Account" asp-action="Register">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="form-group">
+                <label asp-for="Email"></label><br />
+                <input asp-for="Email" class="form-control" />
+                <span class="text-danger" asp-validation-for="Email"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password"></label><br />
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PasswordConfirm"></label><br />
+                <input asp-for="PasswordConfirm" class="form-control" />
+                <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+            </div>
+            <div>
+                <input class="btn btn-primary" type="submit" value="Регистрация" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
