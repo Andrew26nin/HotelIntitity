@@ -1,6 +1,8 @@
 ﻿
 using HotelIntitity.Data;
 using HotelIntitity.Models;
+using HotelIntitity.ViewModels.FilterViewModel;
+using HotelIntitity.ViewModels.FilterViewModel.RoomVM;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,33 +23,72 @@ namespace HotelIntitity.Controllers
           
             _context = context;
 
-            _rc = _context.Room.Join(_context.RoomType, // второй набор
-     p => p.RoomTypeId, // свойство-селектор объекта из первого набора
-     c => c.Id, // свойство-селектор объекта из второго набора
-     (p, c) => new // результат
-       {
-         Id = p.Id,
-         Type = c.Type,
-         Cost = c.Cost
-     });
+           
         }
 
-      
 
 
+        // GET: Rooms
+        public async Task<IActionResult> Index(int? roomtype, int id, int page = 1,
+            SortState sortOrder = SortState.IdAsc)
+        {
+            int pageSize = 3;
+
+            //фильтрация
+            IQueryable<Room> rooms = _context.Room.Include(x => x.RoomType);
+
+            if (roomtype != null && roomtype != 0)
+            {
+                rooms = rooms.Where(p => p.RoomTypeId == roomtype);
+            }
+            if (id != null && id != 0)
+            {
+                rooms = rooms.Where(p => p.Id==id);
+            }
+
+            // сортировка
+            switch (sortOrder)
+            {
+                case SortState.IdDesc:
+                    rooms = rooms.OrderByDescending(s => s.Id);
+                    break;
+               
+                case SortState.TypeAsc:
+                    rooms = rooms.OrderBy(s => s.RoomType.Type);
+                    break;
+                case SortState.TypeDesc:
+                    rooms = rooms.OrderByDescending(s => s.RoomType.Type);
+                    break;
+                default:
+                    rooms = rooms.OrderBy(s => s.Id);
+                    break;
+            }
+
+            // пагинация
+            var count = await rooms.CountAsync();
+            var items = await rooms.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            IndexViewModel viewModel = new IndexViewModel
+            {
+                PageViewModel = new PageViewModel(count, page, pageSize),
+                SortViewModel = new SortViewModel(sortOrder),
+                FilterViewModel = new FilterViewModel(_context.RoomType.ToList(), roomtype, id),
+                Rooms = items
+            };
+            return View(viewModel);
+        }
 
 
 
 
 
         // GET: Rooms
-        public async Task<IActionResult> Index()
-        {
-           
-
-           // return View(_rc.);
-            return View(await _context.Room.ToListAsync());
-        }
+        //public async Task<IActionResult> Index()
+        //{
+          
+        //    return View(await _context.Room.ToListAsync());
+        //}
 
 
 
@@ -80,8 +121,7 @@ namespace HotelIntitity.Controllers
         }
 
         // POST: Rooms/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,RoomTypeId")] Room room)
@@ -115,8 +155,6 @@ namespace HotelIntitity.Controllers
         }
 
         // POST: Rooms/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,RoomTypeId")] Room room)

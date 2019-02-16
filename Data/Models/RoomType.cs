@@ -11,5 +11,12 @@ namespace HotelIntitity.Models
         public int Id { get; set; }
         public string Type { get; set; }
         public decimal Cost { get; set; }
+
+        public List<Room> Rooms { get; set; }
+
+        public RoomType()
+        {
+            Rooms = new List<Room>();
+        }
     }
 }

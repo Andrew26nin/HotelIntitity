@@ -1,55 +1,120 @@
-﻿@model IEnumerable<HotelIntitity.Models.Room>
+﻿@*@model IEnumerable<HotelIntitity.Models.Room>
+    @{
+        ViewData["Title"] = "Index";
+    }
+    <h2>Добавление</h2>
+    <p>
+        <a asp-action="Create">Добавить номер отеля</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+
+                    № Номера
+                </th>
+                <th>
+
+                    Тип номера
+                </th>
+
+                <th>
+
+                    Стоимость суток
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoomType.Type)
+                    </td>
+                   <td>
+                        @Html.DisplayFor(modelItem => item.RoomType.Cost)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Детально</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
+
+
+
+
+@using HotelIntitity.ViewModels.FilterViewModel.RoomVM
+@model IndexViewModel
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Home Page";
 }
-<h2>Добавление</h2>
+<h2>Номера отеля</h2>
 <p>
     <a asp-action="Create">Добавить номер отеля</a>
 </p>
+<form method="get">
+    <div class="form-inline">
+        <label class="control-label">Номер: </label>
+        @Html.TextBox("id", Model.FilterViewModel.SelectedId, htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">Тип: </label>
+        @Html.DropDownList("RoomType", Model.FilterViewModel.RoomTypes as SelectList,
+                htmlAttributes: new { @class = "form-control" })
+
+        <input type="submit" value="Фильтр" class="btn btn-default" />
+    </div>
+</form>
+
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @*@Html.DisplayNameFor(model => model.Id)*@
-                № Номера
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.RoomType.Type)*@
-                Тип номера
-            </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.RoomType.Capacity)
-                Вместимость
-            </th>*@
-            <th>
-                @*@Html.DisplayNameFor(model => model.RoomType.Cost)*@
-                Стоимость суток
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RoomType.Type)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Capacity)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.RoomType.Cost)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Детально</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
-            </td>
-        </tr>
-        }
-    </tbody>
+    <tr>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.IdSort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedId)"
+               asp-route-company="@(Model.FilterViewModel.SelectedType)">Имя</a>
+        </th>
+        <th>Цена</th>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@(Model.SortViewModel.TypeSort)"
+               asp-route-name="@(Model.FilterViewModel.SelectedType)"
+               asp-route-company="@(Model.FilterViewModel.SelectedType)">Тип номера</a>
+        </th>
+    </tr>
+    @foreach (Room item in Model.Rooms)
+    {
+        <tr><td>@item.Id</td><td>@item.RoomType.Cost</td><td>@item.RoomType.Type</td></tr>
+    }
 </table>
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+       asp-route-name="@(Model.FilterViewModel.SelectedId)"
+       asp-route-company="@(Model.FilterViewModel.SelectedType)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-default btn">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+       asp-route-name="@(Model.FilterViewModel.SelectedId)"
+       asp-route-company="@(Model.FilterViewModel.SelectedType)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-default btn">
+        Вперед
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+}

@@ -15,8 +15,14 @@
 
 
   <ItemGroup>
+    <Folder Include="ViewModels\FilterViewModel\RoomVM\" />
     <Folder Include="Views\Client\" />
     <Folder Include="Views\Room\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Data\Data.csproj" />
   </ItemGroup>
 
 </Project>
