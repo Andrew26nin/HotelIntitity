@@ -19,7 +19,13 @@ namespace HotelIntitity.Models
         public bool IsActive { get; set; }
         public int ClientId { get; set; }
         public int RoomId { get; set; }
+        //public virtual List<Client> Client { get; set; }
+        //public virtual List<Room> Room { get; set; }
+
         public virtual Client Client { get; set; }
         public virtual Room Room { get; set; }
+
+
+
     }
 }

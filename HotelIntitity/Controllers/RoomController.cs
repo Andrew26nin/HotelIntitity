@@ -32,6 +32,12 @@ namespace HotelIntitity.Controllers
      });
         }
 
+      
+
+
+
+
+
 
 
         // GET: Rooms
@@ -39,8 +45,8 @@ namespace HotelIntitity.Controllers
         {
            
 
-            return View(_rc);
-            //return View(await _context.Room.ToListAsync());
+           // return View(_rc.);
+            return View(await _context.Room.ToListAsync());
         }
 
 

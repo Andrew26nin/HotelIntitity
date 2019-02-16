@@ -1,5 +1,6 @@
 ﻿using HotelIntitity.Data;
 using HotelIntitity.Models;
+using HotelIntitity.ViewModels.FilterViewModel.ClientVM;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,10 +27,72 @@ namespace HotelIntitity.Controllers
 
 
         // GET: Clients
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.Client.ToListAsync());
+        //}
+
+
+
+
+        #region Test
+
+        public async Task<IActionResult> Index(string email, string name, int page = 1,
+             SortState sortOrder = SortState.NameAsc)
         {
-            return View(await _context.Client.ToListAsync());
+            int pageSize = 3;
+
+            //фильтрация
+            IQueryable<Client> clients = _context.Client;
+
+          
+            if (!String.IsNullOrEmpty(name))
+            {
+                clients = clients.Where(p => p.Name.Contains(name));
+            }
+            if (!String.IsNullOrEmpty(email))
+            {
+                clients = clients.Where(p => p.Email.Contains(email));
+            }
+
+            // сортировка
+            switch (sortOrder)
+            {
+                case SortState.NameDesc:
+                    clients = clients.OrderByDescending(s => s.Name);
+                    break;
+                case SortState.EmailAsc:
+                    clients = clients.OrderBy(s => s.Email);
+                    break;
+                case SortState.EmailDesc:
+                    clients = clients.OrderByDescending(s => s.Email);
+                    break;
+                
+                default:
+                    clients = clients.OrderBy(s => s.Name);
+                    break;
+            }
+
+            // пагинация
+            var count = await clients.CountAsync();
+            var items = await clients.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            IndexViewModel viewModel = new IndexViewModel
+            {
+                PageViewModel = new PageViewModel(count, page, pageSize),
+                SortViewModel = new SortViewModel(sortOrder),
+                FilterViewModel = new FilterViewModel(name, email),
+                Clients = items
+            };
+            return View(viewModel);
         }
+
+
+        #endregion
+
+
+
 
 
         #region API Detail
