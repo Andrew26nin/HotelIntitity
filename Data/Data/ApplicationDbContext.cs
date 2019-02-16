@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using HotelIntitity.Models;
+using Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace HotelIntitity.Data
+namespace Data.Models
 {
     public class ApplicationDbContext : IdentityDbContext
     {

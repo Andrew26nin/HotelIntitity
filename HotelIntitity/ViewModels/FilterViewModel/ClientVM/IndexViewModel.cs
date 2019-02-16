@@ -1,8 +1,5 @@
-﻿using HotelIntitity.Models;
-using System;
+﻿using Data.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HotelIntitity.ViewModels.FilterViewModel.ClientVM
 {

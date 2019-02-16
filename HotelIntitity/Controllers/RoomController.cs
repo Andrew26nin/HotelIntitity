@@ -1,11 +1,9 @@
-﻿
-using HotelIntitity.Data;
-using HotelIntitity.Models;
+﻿using Data.Models;
 using HotelIntitity.ViewModels.FilterViewModel;
 using HotelIntitity.ViewModels.FilterViewModel.RoomVM;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,8 +13,7 @@ namespace HotelIntitity.Controllers
     public class RoomController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly ApplicationDbContext _roomContext;
-        private readonly IQueryable _rc;
+       
         public  RoomController(ApplicationDbContext context)
         {
             // Create database context
@@ -101,7 +98,7 @@ namespace HotelIntitity.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Room
+            var room = await _context.Room.Include(x => x.RoomType)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (room == null)
             {
@@ -117,6 +114,9 @@ namespace HotelIntitity.Controllers
         // GET: Rooms/Create
         public IActionResult Create()
         {
+            var q = _context.Room.ToList().Max(i => i.Id)+1;
+            ViewBag.Id = q.ToString();
+            ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Id", "Type");
             return View();
         }
 
@@ -124,11 +124,13 @@ namespace HotelIntitity.Controllers
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RoomTypeId")] Room room)
+        public async Task<IActionResult> Create([Bind("RoomTypeId")] Room room)
         {
+            var q = _context.Room.ToList().Max(i => i.Id) + 1;
             if (ModelState.IsValid)
             {
-                _context.Add(room);
+               // room.Id = q;
+                _context.Room.Add(room);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -139,6 +141,7 @@ namespace HotelIntitity.Controllers
 
 
         // GET: Rooms/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -151,6 +154,7 @@ namespace HotelIntitity.Controllers
             {
                 return NotFound();
             }
+            ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Id", "Type");
             return View(room);
         }
 
@@ -168,7 +172,7 @@ namespace HotelIntitity.Controllers
             {
                 try
                 {
-                    _context.Update(room);
+                    _context.Room.Update(room);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -200,6 +204,7 @@ namespace HotelIntitity.Controllers
             }
 
             var room = await _context.Room
+                .Include(x => x.RoomType)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (room == null)
             {

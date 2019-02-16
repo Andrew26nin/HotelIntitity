@@ -18,6 +18,7 @@
     <Folder Include="ViewModels\FilterViewModel\RoomVM\" />
     <Folder Include="Views\Client\" />
     <Folder Include="Views\Room\" />
+    <Folder Include="Views\Booking\" />
   </ItemGroup>
 
 

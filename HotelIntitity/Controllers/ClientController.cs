@@ -1,5 +1,6 @@
-﻿using HotelIntitity.Data;
-using HotelIntitity.Models;
+﻿using Data.Models;
+using HotelIntitity.Data;
+
 using HotelIntitity.ViewModels.FilterViewModel;
 using HotelIntitity.ViewModels.FilterViewModel.ClientVM;
 using Microsoft.AspNetCore.Authorization;

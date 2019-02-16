@@ -52,6 +52,8 @@
 
 
 @using HotelIntitity.ViewModels.FilterViewModel.RoomVM
+@using Data.Models
+@using Data
 @model IndexViewModel
 
 @{
@@ -88,10 +90,21 @@
                asp-route-name="@(Model.FilterViewModel.SelectedType)"
                asp-route-company="@(Model.FilterViewModel.SelectedType)">Тип номера</a>
         </th>
+        <th></th>
     </tr>
     @foreach (Room item in Model.Rooms)
     {
-        <tr><td>@item.Id</td><td>@item.RoomType.Cost</td><td>@item.RoomType.Type</td></tr>
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.RoomType.Cost</td>
+            <td>@item.RoomType.Type</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Детально</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+            </td>
+
+        </tr>
     }
 </table>
 @if (Model.PageViewModel.HasPreviousPage)

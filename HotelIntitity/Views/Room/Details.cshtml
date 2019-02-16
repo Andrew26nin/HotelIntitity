@@ -8,14 +8,28 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.RoomType.Type)
+           Номер
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+
+
+        <dt>
+            Тип номера
         </dt>
         <dd>
             @Html.DisplayFor(model => model.RoomType.Type)
         </dd>
+        <dt>
+            Цена номера
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RoomType.Cost)
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a> |
+    <a asp-action="Index">Вернуться</a>
 </div>

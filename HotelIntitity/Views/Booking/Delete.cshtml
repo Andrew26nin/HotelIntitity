@@ -1,0 +1,73 @@
+﻿@model HotelManager.Models.Booking
+@{
+    ViewData["Title"] = "Удаление/Оплата";
+}
+<h2>Удаление</h2>
+<h3>Вы уверены, что хотите удалить эту запись</h3>
+<div>
+    <h4>Учёт</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Дата заезда
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+
+
+        <dt>
+            Дата выезда
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+
+
+        <dt>
+            Номер занят
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+
+        <dt>
+            Клиент
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Client.Name)
+        </dd>
+
+
+        <dt>
+            Номер
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Room.Id)
+        </dd>
+
+
+        <dt>
+            Тип номера
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Room.RoomTypeId)
+        </dd>
+
+        <dt>
+            К оплате
+        </dt>
+        <dd>
+
+            @ViewBag.Cash
+        </dd>
+
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить/Оплатить" class="btn btn-default" /> |
+        <a asp-action="Index">Вернуться</a>
+    </form>
+</div>

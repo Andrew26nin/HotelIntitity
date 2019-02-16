@@ -3,28 +3,27 @@
     ViewData["Title"] = "Create";
 }
 <h2>Создать</h2>
-<h4>Номер отеля</h4>
+<h4>Номера отеля</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+           
             <div class="form-group">
-                <label asp-for="RoomType.Type" class="control-label"></label>
-                <input asp-for="RoomType.Type" class="form-control" />
-                <span asp-validation-for="RoomType.Type" class="text-danger"></span>
+                <label class="control-label">Номер</label>
+                <label>
+                    @ViewBag.Id
+                </label>
             </div>
-            @*<div class="form-group">
-                <label asp-for="Capacity" class="control-label"></label>
-                <input asp-for="Capacity" class="form-control" />
-                <span asp-validation-for="Capacity" class="text-danger"></span>
-            </div>*@
-            @*<div class="form-group">
-                <label asp-for="RoomType.Cost" class="control-label"></label>
-                <input asp-for="RoomType.Cost" class="form-control" />
-                <span asp-validation-for="RoomType.Cost" class="text-danger"></span>
-            </div>*@
-            
+
+            <div class="form-group">
+                <label asp-for="RoomTypeId" class="control-label">Тип номера</label>
+                <select asp-for="RoomTypeId" class="form-control" asp-items="ViewBag.RoomType"></select>
+            </div>
+           
             <div class="form-group">
                 <input type="submit" value="Создать" class="btn btn-default" />
             </div>
