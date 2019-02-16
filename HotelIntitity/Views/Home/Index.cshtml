@@ -1,8 +1,68 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<Data.Models.Booking>
+@{
+    ViewData["Title"] = "Index";
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+}
+<h2>Учёт</h2>
+<p>
+    <a asp-action="Create">Создать запись</a>
+</p>
+
+
+@*List of bookings*@
+<table class="table">
+
+    <thead>
+        <tr>
+            <th>
+                Дата заезда
+            </th>
+            <th>
+                Дата выезда
+            </th>
+            <th>
+                Номер занят
+            </th>
+            <th>
+                Данные клиента
+            </th>
+            <th>
+                № Комнаты
+            </th>
+            <th>
+                Тип
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Room.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Room.RoomType.Type)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Детали</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

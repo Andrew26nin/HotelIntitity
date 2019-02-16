@@ -38,7 +38,7 @@ namespace HotelIntitity.Controllers
             {
                 rooms = rooms.Where(p => p.RoomTypeId == roomtype);
             }
-            if (id != null && id != 0)
+            if ( id != 0)
             {
                 rooms = rooms.Where(p => p.Id==id);
             }
