@@ -1,0 +1,55 @@
+﻿@model IEnumerable<HotelIntitity.Models.Room>
+@{
+    ViewData["Title"] = "Index";
+}
+<h2>Добавление</h2>
+<p>
+    <a asp-action="Create">Добавить номер отеля</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Id)*@
+                № Номера
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.RoomType.Type)*@
+                Тип номера
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.RoomType.Capacity)
+                Вместимость
+            </th>*@
+            <th>
+                @*@Html.DisplayNameFor(model => model.RoomType.Cost)*@
+                Стоимость суток
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoomType.Type)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Capacity)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.RoomType.Cost)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Детально</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
