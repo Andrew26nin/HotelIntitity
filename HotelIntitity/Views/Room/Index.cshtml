@@ -1,57 +1,4 @@
-﻿@*@model IEnumerable<Data.Models.Room>
-    @{
-        ViewData["Title"] = "Index";
-    }
-    <h2>Добавление</h2>
-    <p>
-        <a asp-action="Create">Добавить номер отеля</a>
-    </p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-
-                    № Номера
-                </th>
-                <th>
-
-                    Тип номера
-                </th>
-
-                <th>
-
-                    Стоимость суток
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RoomType.Type)
-                    </td>
-                   <td>
-                        @Html.DisplayFor(modelItem => item.RoomType.Cost)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Детально</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>*@
-
-
-
-
-@using HotelIntitity.ViewModels.FilterViewModel.RoomVM
+﻿@using HotelIntitity.ViewModels.FilterViewModel.RoomVM
 @using Data.Models
 @using Data
 @model IndexViewModel
@@ -75,14 +22,14 @@
         <input type="submit" value="Фильтр" class="btn btn-default" />
     </div>
 </form>
-
+<br />
 <table class="table">
     <tr>
         <th>
             <a asp-action="Index"
                asp-route-sortOrder="@(Model.SortViewModel.IdSort)"
                asp-route-name="@(Model.FilterViewModel.SelectedId)"
-               asp-route-company="@(Model.FilterViewModel.SelectedType)">Имя</a>
+               asp-route-company="@(Model.FilterViewModel.SelectedType)">№</a>
         </th>
         <th>Цена</th>
         <th>

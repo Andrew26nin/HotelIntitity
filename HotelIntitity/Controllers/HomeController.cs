@@ -19,10 +19,23 @@ namespace HotelIntitity.Controllers
             // Create database context
             _context = context;
 
+            if (!_context.Room.Any())
+            {
+                _context.Room.Add(new Room { RoomTypeId = 1 });
+                _context.Room.Add(new Room { RoomTypeId = 2 });
+                _context.SaveChanges();
+            }
+
+            if (!_context.Client.Any())
+            {
+                _context.Client.Add(new Client { Name = "Andrew", Email = "test1@test.com" });
+                _context.Client.Add(new Client { Name = "Nick", Email = "test2@test.com" });
+                _context.SaveChanges();
+            }
             if (!_context.Booking.Any())
             {
-                _context.Booking.Add(new Booking {ClientId=3, RoomId=1,IsActive=true ,StartDate=DateTime.Today.AddDays(1), EndDate=DateTime.Today.AddDays(3) });
-                _context.Booking.Add(new Booking { ClientId = 4, RoomId = 3, IsActive = true, StartDate = DateTime.Today.AddDays(4), EndDate = DateTime.Today.AddDays(5) });
+                _context.Booking.Add(new Booking { ClientId = 1, RoomId = 1, IsActive = true, StartDate = DateTime.Today.AddDays(1), EndDate = DateTime.Today.AddDays(3) });
+                _context.Booking.Add(new Booking { ClientId = 2, RoomId = 2, IsActive = true, StartDate = DateTime.Today.AddDays(4), EndDate = DateTime.Today.AddDays(5) });
                 _context.SaveChanges();
             }
 
@@ -36,7 +49,7 @@ namespace HotelIntitity.Controllers
         // GET: Bookings
         public async Task<IActionResult> Index(int? id)
         {
-            var bookings = _context.Booking.Include(b => b.Client).Include(b => b.Room).Include(b=>b.Room.RoomType);
+            var bookings = _context.Booking.Include(b => b.Client).Include(b => b.Room).Include(b => b.Room.RoomType);
 
 
             {
@@ -64,7 +77,7 @@ namespace HotelIntitity.Controllers
             var booking = await _context.Booking
                 .Include(b => b.Client)
                 .Include(b => b.Room)
-                .Include(b=>b.Room.RoomType)
+                .Include(b => b.Room.RoomType)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (booking == null)
             {
@@ -84,7 +97,7 @@ namespace HotelIntitity.Controllers
             //ViewData["ClientId"] = new SelectList(_context.Set<Client>(), "Id", "Id");
             //ViewData["RoomId"] = new SelectList(_context.Set<Room>(), "Id", "Id");
             ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type");
-           // ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name");
+            // ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name");
             return View();
         }
 
@@ -98,12 +111,6 @@ namespace HotelIntitity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("StartDate,EndDate,Name,Email,RoomType")] BookingViewModel bookingVM)
         {
-
-            
-           
-
-
-
             Booking booking = new Booking();
             if (ModelState.IsValid)
             {
@@ -114,16 +121,17 @@ namespace HotelIntitity.Controllers
                 DateTime startDate = bookingVM.StartDate.AddHours(12);
                 DateTime endDate = bookingVM.EndDate.AddHours(12);
 
-                if (startDate < DateTime.Today || startDate > endDate)
+                if (startDate < DateTime.Today || startDate > endDate || endDate < DateTime.Today)
                 {
-                    ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type",bookingVM.RoomType);
-                   // ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name", booking.ClientId);
-                    ViewBag.Status = $"Дата заезда не может быть до {DateTime.Today.Date.ToString()} или позже даты выезда.";
+                    ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type", bookingVM.RoomType);
+                    // ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name", booking.ClientId);
+                    ViewBag.Status = $"Дата заезда не может быть до {DateTime.Today.Date.ToShortDateString()} или позже даты выезда.";
                     return View(bookingVM);
                 }
 
-                var activeBookings = _context.Booking.Where(b => b.IsActive && b.Room.RoomType.Type == bookingVM.RoomType);
-                foreach (var room in _context.Room)
+                var currentRoomType = _context.Room.Where(b => b.RoomType.Type == bookingVM.RoomType);
+                var activeBookings = _context.Booking.Where(b => b.IsActive);
+                foreach (var room in currentRoomType)
                 {
                     var activeBookingsForCurrentRoom = activeBookings.Where(b => b.RoomId == room.Id);
                     if (activeBookingsForCurrentRoom.All(b => startDate < b.StartDate &&
@@ -150,7 +158,7 @@ namespace HotelIntitity.Controllers
                 }
             }
             ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type", bookingVM.RoomType);
-           // ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name", booking.ClientId);
+            // ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name", booking.ClientId);
             ViewBag.Status = "Создание записи невозможна. Нет свободных номеров.";
             return View(booking);
         }
@@ -158,61 +166,77 @@ namespace HotelIntitity.Controllers
 
 
 
-        // GET: Bookings/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Bookings/Edit/5
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var booking = await _context.Booking.SingleOrDefaultAsync(m => m.Id == id);
-            if (booking == null)
-            {
-                return NotFound();
-            }
+        //    var booking = await _context.Booking
+        //        .Include(b => b.Client)
+        //        .Include(b => b.Room)
+        //        .Include(b => b.Room.RoomType).SingleOrDefaultAsync(m => m.Id == id);
+        //    if (booking == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name", booking.ClientId);
-            ViewData["RoomId"] = new SelectList(_context.Set<Room>(), "Id", "Id", booking.RoomId);
-            return View(booking);
-        }
+        //    var bookingVM = new BookingViewModel
+        //    {
+        //        Id =booking.Id,
+        //        Email =booking.Client.Email,
+        //        EndDate =booking.EndDate,
+        //        StartDate =booking.StartDate,
+        //        RoomType =booking.Room.RoomType.Type,
+        //        Name =booking.Client.Name
+        //    };
 
-        // POST: Bookings/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StartDate,EndDate,IsActive,ClientId,RoomId,Id")] Booking booking)
-        {
-            if (id != booking.Id)
-            {
-                return NotFound();
-            }
+        //    //ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name", booking.ClientId);
+        //    ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type", bookingVM.RoomType);
+        //    return View(bookingVM);
+        //}
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(booking);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BookingExists(booking.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name", booking.ClientId);
-            ViewData["RoomId"] = new SelectList(_context.Set<Room>(), "Id", "Id", booking.RoomId);
-            return View(booking);
-        }
+        //// POST: Bookings/Edit/5
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("StartDate,EndDate,Name,Email,RoomType,Id")] BookingViewModel bookingVM)
+        //{
+        //    if (id != bookingVM.Id)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        var booking = new Booking {Id=id, };
+
+
+        //        try
+        //        {
+        //            _context.Update(booking);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!BookingExists(booking.Id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type", bookingVM.RoomType);
+
+        //    return View(bookingVM);
+        //}
 
 
         // GET: Bookings/Delete/5
@@ -226,13 +250,23 @@ namespace HotelIntitity.Controllers
             var booking = await _context.Booking
                 .Include(b => b.Client)
                 .Include(b => b.Room)
+                .Include(b => b.Room.RoomType)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (booking == null)
             {
                 return NotFound();
             }
-            //int cash = (booking.EndDate.Day - booking.StartDate.Day) * booking.Room.Cost;
-            //ViewBag.Cash = cash.ToString();
+            decimal cash = (booking.EndDate.Day - booking.StartDate.Day) * booking.Room.RoomType.Cost;
+            decimal cashToday = 0.0M;
+            if (DateTime.Today > booking.StartDate)
+            {
+                cashToday = (DateTime.Today.Day - booking.StartDate.Day) * booking.Room.RoomType.Cost;
+                ViewBag.CashToday = cashToday.ToString();
+            }
+            else { ViewBag.CashToday = "-"; }
+
+            ViewBag.Cash = cash.ToString();
+
             return View(booking);
         }
 
@@ -242,8 +276,15 @@ namespace HotelIntitity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var booking = await _context.Booking.SingleOrDefaultAsync(m => m.Id == id);
+            var booking = await _context.Booking
+                .Include(b => b.Client)
+                .SingleOrDefaultAsync(m => m.Id == id);
+            var client = _context.Client.SingleOrDefault(c => c.Id == booking.ClientId);
+
+
             _context.Booking.Remove(booking);
+            _context.Client.Remove(client);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

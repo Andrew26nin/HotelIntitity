@@ -8,6 +8,7 @@ namespace HotelIntitity.ViewModels
 {
     public class BookingViewModel
     {
+        public int Id { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }

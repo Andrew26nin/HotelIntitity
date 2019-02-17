@@ -19,8 +19,13 @@ namespace HotelIntitity.Controllers
             // Create database context
           
             _context = context;
+            if (!_context.Room.Any())
+            {
+                _context.Room.Add(new Room { RoomTypeId=1 });
+                _context.Room.Add(new Room { RoomTypeId=2 });
+                _context.SaveChanges();
+            }
 
-           
         }
 
 

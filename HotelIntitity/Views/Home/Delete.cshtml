@@ -1,61 +1,80 @@
 ﻿@model Data.Models.Booking
 @{
-    ViewData["Title"] = "Детально";
+    ViewData["Title"] = "Удаление/Оплата";
 }
-<h2>Детально</h2>
+<h2>Оплата</h2>
+<h4>При оплате запись будет удалена</h4>
 <div>
-    <h4>Учёт</h4>
+   
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @* @Html.DisplayNameFor(model => model.StartDate)*@
             Дата заезда
         </dt>
         <dd>
             @Html.DisplayFor(model => model.StartDate)
         </dd>
 
+
         <dt>
             Дата выезда
-            @*@Html.DisplayNameFor(model => model.EndDate)*@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.EndDate)
         </dd>
 
+
         <dt>
             Номер занят
-            @*@Html.DisplayNameFor(model => model.IsActive)*@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.IsActive)
         </dd>
 
+
         <dt>
             Клиент
-            @*@Html.DisplayNameFor(model => model.Client)*@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Client.Name)
         </dd>
 
+
         <dt>
             Номер
-            @*@Html.DisplayNameFor(model => model.Room)*@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Room.Id)
         </dd>
+
+
         <dt>
             Тип номера
-            @*@Html.DisplayNameFor(model => model.Room)*@
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Room.RoomTypeId)
+            @Html.DisplayFor(model => model.Room.RoomType.Type)
         </dd>
+
+        <dt>
+            К оплате(за весь период регистрации)
+        </dt>
+        <dd>
+
+            @ViewBag.Cash
+        </dd>
+        <dt>
+            К оплате сегодня
+        </dt>
+        <dd>
+
+            @ViewBag.CashToday
+        </dd>
+
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a> |
-    <a asp-action="Index">Назад</a>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить/Оплатить" class="btn btn-default" /> |
+        <a asp-action="Index">Вернуться</a>
+    </form>
 </div>
