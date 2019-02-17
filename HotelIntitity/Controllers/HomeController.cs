@@ -95,20 +95,16 @@ namespace HotelIntitity.Controllers
 
         // GET: Bookings/Create
         public IActionResult Create()
-        {
-            //ViewData["ClientId"] = new SelectList(_context.Set<Client>(), "Id", "Id");
-            //ViewData["RoomId"] = new SelectList(_context.Set<Room>(), "Id", "Id");
+        {            
             ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type");
-            // ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name");
-            return View();
+           return View();
         }
 
 
 
 
         // POST: Bookings/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("StartDate,EndDate,Name,Email,RoomType")] BookingViewModel bookingVM)
@@ -125,8 +121,7 @@ namespace HotelIntitity.Controllers
 
                 if (startDate < DateTime.Today || startDate > endDate || endDate < DateTime.Today)
                 {
-                    ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type", bookingVM.RoomType);
-                    // ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name", booking.ClientId);
+                    ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type", bookingVM.RoomType);           
                     ViewBag.Status = $"Дата заезда не может быть до {DateTime.Today.Date.ToShortDateString()} или позже даты выезда.";
                     return View(bookingVM);
                 }
@@ -150,96 +145,18 @@ namespace HotelIntitity.Controllers
                     booking.IsActive = true;
                     booking.StartDate = startDate;
                     booking.EndDate = endDate;
-
-                    //var currentClient = _context.Client.SingleOrDefaultAsync(cl => cl.Name == bookingVM.Name && cl.Email == bookingVM.Email);
-
                     booking.ClientId = client.Id;
                     _context.Booking.Add(booking);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
             }
-            ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type", bookingVM.RoomType);
-            // ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name", booking.ClientId);
+            ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type", bookingVM.RoomType);     
             ViewBag.Status = "Создание записи невозможна. Нет свободных номеров.";
             return View(booking);
         }
 
-
-
-
-        //// GET: Bookings/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var booking = await _context.Booking
-        //        .Include(b => b.Client)
-        //        .Include(b => b.Room)
-        //        .Include(b => b.Room.RoomType).SingleOrDefaultAsync(m => m.Id == id);
-        //    if (booking == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var bookingVM = new BookingViewModel
-        //    {
-        //        Id =booking.Id,
-        //        Email =booking.Client.Email,
-        //        EndDate =booking.EndDate,
-        //        StartDate =booking.StartDate,
-        //        RoomType =booking.Room.RoomType.Type,
-        //        Name =booking.Client.Name
-        //    };
-
-        //    //ViewData["ClientName"] = new SelectList(_context.Set<Client>(), "Id", "Name", booking.ClientId);
-        //    ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type", bookingVM.RoomType);
-        //    return View(bookingVM);
-        //}
-
-        //// POST: Bookings/Edit/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("StartDate,EndDate,Name,Email,RoomType,Id")] BookingViewModel bookingVM)
-        //{
-        //    if (id != bookingVM.Id)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        var booking = new Booking {Id=id, };
-
-
-        //        try
-        //        {
-        //            _context.Update(booking);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!BookingExists(booking.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["RoomType"] = new SelectList(_context.Set<RoomType>(), "Type", "Type", bookingVM.RoomType);
-
-        //    return View(bookingVM);
-        //}
-
+        
 
         // GET: Bookings/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -304,13 +221,9 @@ namespace HotelIntitity.Controllers
 
 
 
+        
 
-
-
-
-
-
-
+                     
 
 
 

@@ -31,8 +31,7 @@ namespace HotelIntitity.Controllers
         }
 
 
-
-        // GET: Rooms
+         // GET: Rooms
         public async Task<IActionResult> Index(int? roomtype, int id, int page = 1,
             SortState sortOrder = SortState.IdAsc)
         {
@@ -82,20 +81,6 @@ namespace HotelIntitity.Controllers
             };
             return View(viewModel);
         }
-
-
-
-
-
-        // GET: Rooms
-        //public async Task<IActionResult> Index()
-        //{
-          
-        //    return View(await _context.Room.ToListAsync());
-        //}
-
-
-
 
         // GET: Rooms/Details/5
         public async Task<IActionResult> Details(int? id)

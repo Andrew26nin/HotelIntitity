@@ -58,9 +58,7 @@
                     @Html.DisplayFor(modelItem => item.Room.RoomType.Type)
                 </td>
                 <td>
-                    @*<a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |*@
-                    @*<a asp-action="Details" asp-route-id="@item.Id">Детали</a> |*@
-                    <a asp-action="Delete" asp-route-id="@item.Id">Оплата (Удаление)</a>
+                 <a asp-action="Delete" asp-route-id="@item.Id">Оплата (Удаление)</a>
                 </td>
             </tr>
         }

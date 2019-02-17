@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 namespace HotelIntitity.Controllers
 {
     public class AccountController : Controller
-    {
-
-
+    {        
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
 
@@ -39,10 +37,8 @@ namespace HotelIntitity.Controllers
                 if (result.Succeeded)
                 {
                     // установка куки
-                    await _userManager.AddToRoleAsync(user, "user");
-                    //await _signInManager.SignInAsync(user, "admin");
-                    return RedirectToAction("Index", "Home");
-                    //return RedirectToAction("Account", "Login");
+                    await _userManager.AddToRoleAsync(user, "user");           
+                    return RedirectToAction("Index", "Home");                
                 }
                 else
                 {
