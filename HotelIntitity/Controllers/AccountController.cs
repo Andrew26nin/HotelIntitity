@@ -39,7 +39,7 @@ namespace HotelIntitity.Controllers
                 if (result.Succeeded)
                 {
                     // установка куки
-                    await _userManager.AddToRoleAsync(user, "admin");
+                    await _userManager.AddToRoleAsync(user, "user");
                     //await _signInManager.SignInAsync(user, "admin");
                     return RedirectToAction("Index", "Home");
                     //return RedirectToAction("Account", "Login");

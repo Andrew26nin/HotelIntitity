@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Data.Models;
 using HotelIntitity.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelIntitity.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;

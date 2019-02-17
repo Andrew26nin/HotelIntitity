@@ -1,6 +1,7 @@
 ﻿using Data.Models;
 using HotelIntitity.ViewModels.FilterViewModel;
 using HotelIntitity.ViewModels.FilterViewModel.RoomVM;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace HotelIntitity.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class RoomController : Controller
     {
         private readonly ApplicationDbContext _context;
